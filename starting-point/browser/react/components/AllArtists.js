@@ -4,25 +4,37 @@ import axios from 'axios';
 
 export default class AllArtists extends Component {
 
-  constructor () {
+  constructor() {
     super();
     this.state = {
-      artists: []
+      artists: [],
+      inputValue: ""
     };
+    this.handleChange = this.handleChange.bind(this);
+
   }
 
-  componentDidMount () {
-    axios.get('/api/artists')
-      .then(res => res.data)
-      .then(artists => this.setState({ artists }));
+   componentDidMount() {
+    axios.get("/api/artists/").then(res => res.data).then(artists => {
+      this.setState({ artists });
+    });
   }
-
+    handleChange(syntheticEvent){
+      this.setState( {inputValue: syntheticEvent.target.value});
+    }
   render () {
 
-    const artists = this.state.artists;
-
+    const artists = this.state.artists.filter(artist => artist.name.match(this.state.inputValue))
     return (
       <div>
+      <form className="form-group" style={{marginTop: '20px'}}>
+         <input
+             className="form-control"
+             placeholder="Enter artist name"
+             onChange = {this.handleChange}
+            />
+      </form>
+
         <h3>Artists</h3>
         <div className="list-group">
           {
